@@ -1,0 +1,8 @@
+# data dir
+tmp/
+data/
+checkpoints/**
+
+# tmp and cache dir
+__pycache__/
+.neptune/
