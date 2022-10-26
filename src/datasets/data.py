@@ -16,22 +16,34 @@ class PAMAP2Reader(object):
         starting = True
         # action_seq = []
         action_ID = 0
+
         for l in open(file_path).readlines():
             s = l.strip().split()
             if s[1] != "0":
                 if (prev_action != int(s[1])):
                     if not(starting):
-                        all_data['data'][action_ID] = np.array(action_seq)
+                        df = pd.DataFrame(action_seq)
+                        intep_df = df.interpolate(method='linear', limit_direction='backward', axis=0)
+                        intep_data = intep_df.values 
+                        all_data['data'][action_ID] = np.array(intep_data)
                         all_data['target'][action_ID] = prev_action
                         action_ID+=1
                     action_seq = []
                 else:
                     starting = False
-                data_seq = np.nan_to_num(np.array(s[3:]), nan=0).astype(np.float16)
+                data_seq = np.array(s[3:]).astype(np.float16)
                 # data_seq[np.isnan(data_seq)] = 0
                 action_seq.append(data_seq)
                 prev_action = int(s[1])
+                # print(prev_action)
                 all_data['collection'].append(data_seq)
+        else: 
+            if len(action_seq) > 1:
+                df = pd.DataFrame(action_seq)
+                intep_df = df.interpolate(method='linear', limit_direction='backward', axis=0)
+                intep_data = intep_df.values
+                all_data['data'][action_ID] = np.array(intep_data)
+                all_data['target'][action_ID] = prev_action
         return all_data
 
     def readPamap2Files(self, filelist, cols, labelToId):
@@ -48,7 +60,7 @@ class PAMAP2Reader(object):
         return np.asarray(data), np.asarray(labels, dtype=int), np.array(collection)
 
     def readPamap2(self):
-        files = ['subject101.dat', 'subject102.dat','subject103.dat','subject104.dat', 'subject105.dat', 'subject106.dat', 'subject107.dat', 'subject108.dat', 'subject109.dat']
+        files = ['subject101.dat', 'subject102.dat','subject103.dat','subject104.dat', 'subject105.dat', 'subject106.dat', 'subject107.dat', 'subject108.dat', 'subject109.dat', 'subject110.dat', 'subject111.dat', 'subject112.dat', 'subject113.dat', 'subject114.dat']
             
         label_map = [
             #(0, 'other'),
@@ -90,41 +102,48 @@ class PAMAP2Reader(object):
         self.idToLabel = idToLabel
         # return data, idToLabel
 
-    def resampling(self, data, targets):
+    def resample(self, signal, freq=10):
+        step_size = int(100/10)
+        seq_len, _ = signal.shape 
+        resample_indx = np.arange(0, seq_len, step_size)
+        resampled_sig = signal[resample_indx, :]
+        return resampled_sig
+
+    def windowing(self, signal, window_len, overlap):
+        seq_len = int(window_len*100) # 100Hz compensation 
+        overlap_len = int(overlap*100) # 100Hz
+        l, _ = signal.shape
+        if l > seq_len:
+            windowing_points = np.arange(start=0, stop=l, step=seq_len, dtype=int)[:-1]
+            windowing_points = windowing_points-overlap_len
+            windowing_points[0] = 0 
+
+            windows = [signal[p:p+seq_len, :] for p in windowing_points]
+        else:
+            windows = []
+        return windows
+
+    def resampling(self, data, targets, window_size, window_overlap, resample_freq):
         assert len(data) == len(targets), "# action data & # action labels are not matching"
         all_data, all_ids, all_labels = [], [], []
         for i, d in enumerate(data):
-            l, _ = d.shape 
+            # print(">>>>>>>>>>>>>>>  ", np.isnan(d).mean())
             label = targets[i]
-            if l < 1200 : # minimum length requirement
-                break 
-            # generate sampling points
-            n_point, _ = divmod(l, 1200)
-            sampling_points = np.arange(start=0, stop=l, step=1200)[:-1]
-            sampling_points = sampling_points-200
-            sampling_points[0] = 0
-            # print(l, sampling_points)
-            # window sampling 
-            for s in sampling_points:
-                sub_sample = np.nan_to_num(resample(d[s:s+1200, :], num=120, axis=0), nan=0)
-                # print(d[s:s+1200, :])
-                nan_perc = np.isnan(sub_sample).astype(int).mean()
-                # print("null value percentage ", nan_perc, "id > ", i+1)
-                all_data.append(sub_sample)
+            windows = self.windowing(d, window_size, window_overlap)
+            for w in windows:
+                # print(np.isnan(w).mean(), label, i)
+                resample_sig = self.resample(w, resample_freq)
+                # print(np.isnan(resample_sig).mean(), label, i)
+                all_data.append(resample_sig)
                 all_ids.append(i+1)
                 all_labels.append(label)
-            
+
         return all_data, all_ids, all_labels
 
-    def generate(self, unseen_classes, resampling=True, seen_ratio=0.2, unseen_ratio=0.8):
+    def generate(self, unseen_classes, resampling=True, window_size=5.21, window_overlap=1, resample_freq=10, seen_ratio=0.2, unseen_ratio=0.8):
         # assert all([i in list(self.label_map.keys()) for i in unseen_classes]), "Unknown Class label!"
         seen_classes = [i for i in range(len(self.idToLabel)) if i not in unseen_classes]
         unseen_mask = np.in1d(self.targets, unseen_classes)
-
-        # normalize data [without considering ]
-        # scaler = MinMaxScaler()
-        # scaler.fit(self.all_data)
-        # self.data = np.array([scaler.transform(d) for d in self.data])
 
         # build seen dataset 
         seen_data = self.data[np.invert(unseen_mask)]
@@ -135,8 +154,8 @@ class PAMAP2Reader(object):
         unseen_targets = self.targets[unseen_mask]
 
         # resampling seen and unseen datasets 
-        seen_data, seen_ids, seen_targets = self.resampling(seen_data, seen_targets)
-        unseen_data, unseen_ids, unseen_targets = self.resampling(unseen_data, unseen_targets)
+        seen_data, seen_ids, seen_targets = self.resampling(seen_data, seen_targets, window_size, window_overlap, resample_freq)
+        unseen_data, unseen_ids, unseen_targets = self.resampling(unseen_data, unseen_targets, window_size, window_overlap, resample_freq)
 
         seen_data, seen_targets = np.array(seen_data), np.array(seen_targets)
         unseen_data, unseen_targets = np.array(unseen_data), np.array(unseen_targets)
@@ -145,7 +164,7 @@ class PAMAP2Reader(object):
         random.shuffle(seen_index)
         split_point = int((1-seen_ratio)*len(seen_index))
         fst_index, sec_index = seen_index[:split_point], seen_index[split_point:]
-        print(type(fst_index), type(sec_index), type(seen_data), type(seen_targets))
+        # print(type(fst_index), type(sec_index), type(seen_data), type(seen_targets))
         X_seen_train, X_seen_val, y_seen_train, y_seen_val = seen_data[fst_index,:], seen_data[sec_index,:], seen_targets[fst_index], seen_targets[sec_index]
         
         # val-test split

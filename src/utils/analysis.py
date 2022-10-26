@@ -94,7 +94,7 @@ def generate_classification_report(existing_class_names, precision, recall, f1, 
     return report
 
 
-def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxcharlength=35):
+def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxcharlength=35, print_report=True):
     """
     For an array of label predictions and the respective true labels, shows confusion matrix, accuracy, recall, precision etc:
     Input:
@@ -108,6 +108,7 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     # Trim class_names to include only classes existing in y_pred OR y_true
     in_pred_labels = set(list(y_pred))
     in_true_labels = set(list(y_true))
+    # print("predicted labels > ", in_pred_labels, "in_true_labels > ", in_true_labels)
 
     existing_class_ind = sorted(list(in_pred_labels | in_true_labels))
     # print("pred label", in_pred_labels, "true label", in_true_labels)
@@ -118,7 +119,7 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     ConfMatrix = metrics.confusion_matrix(y_true, y_pred)
 
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
-    ConfMatrix_normalized_row = ConfMatrix.astype('float') / ConfMatrix.sum(axis=1)[:, np.newaxis] #@nipdep
+    ConfMatrix_normalized_row = metrics.confusion_matrix(y_true, y_pred, normalize='true') #@nipdep
 
     
     plt.figure()
@@ -131,9 +132,10 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     print('Overall accuracy: {:.3f}\n'.format(total_accuracy))
 
     # returns metrics for each class, in the same order as existing_class_names
-    precision, recall, f1, support = metrics.precision_recall_fscore_support(y_true, y_pred, labels=existing_class_ind)
+    precision, recall, f1, support = metrics.precision_recall_fscore_support(y_true, y_pred, labels=existing_class_ind, zero_division=0)
     # Print report
-    print(generate_classification_report(existing_class_names, precision, recall, f1, support, ConfMatrix_normalized_row))
+    if print_report:
+        print(generate_classification_report(existing_class_names, precision, recall, f1, support, ConfMatrix_normalized_row))
 
     # Calculate average precision and recall
     # prec_avg, rec_avg = get_avg_prec_recall(ConfMatrix, existing_class_names, excluded_classes)

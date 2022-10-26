@@ -17,13 +17,14 @@ class FeatureLoss(nn.Module):
 class AttributeLoss(nn.Module):
     def __init__(self):
         super(AttributeLoss, self).__init__()
-        self.loss_func = nn.BCELoss()
+        self.loss_func = nn.BCEWithLogitsLoss()
         self.m = nn.Sigmoid()
 
     def forward(self, attr_pred, attr_true):
         # print("attr true > ", attr_true, "attr pred > ", attr_pred)
-        output = self.loss_func(self.m(attr_pred), attr_true)
+        output = self.loss_func(attr_pred, attr_true)
         return output
+
 
 
 class NoFussCrossEntropyLoss(nn.CrossEntropyLoss):

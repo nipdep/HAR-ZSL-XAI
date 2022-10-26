@@ -254,7 +254,7 @@ class TSTransformerEncoderClassiregressor(nn.Module):
     softmax. Concatenates final layer embeddings and uses 0s to ignore padding embeddings in final output layer.
     """
 
-    def __init__(self, feat_dim, max_len, d_model, n_heads, num_layers, dim_feedforward, num_classes,
+    def __init__(self, feat_dim, max_len, d_model, n_heads, num_layers, dim_feedforward, ft_size,
                  dropout=0.1, pos_encoding='fixed', activation='gelu', norm='BatchNorm', freeze=False):
         super(TSTransformerEncoderClassiregressor, self).__init__()
 
@@ -277,10 +277,10 @@ class TSTransformerEncoderClassiregressor(nn.Module):
         self.dropout1 = nn.Dropout(dropout)
 
         self.feat_dim = feat_dim
-        self.num_classes = num_classes
+        self.ft_size = ft_size
         self.conv1d = nn.Conv1d(self.max_len, 1, 1)
         self.dense1 = nn.Linear(128, 128)
-        self.output_layer = self.build_output_module(d_model, max_len, num_classes)
+        self.output_layer = self.build_output_module(d_model, max_len, ft_size)
 
     def build_output_module(self, d_model, max_len, num_classes):
         # output_layer = nn.Linear(d_model * max_len, num_classes)
@@ -289,7 +289,7 @@ class TSTransformerEncoderClassiregressor(nn.Module):
         # add F.log_softmax and use NLLoss
         return output_layer
 
-    def forward(self, X, padding_masks):
+    def forward(self, X, padding_masks=None):
         """
         Args:
             X: (batch_size, seq_length, feat_dim) torch tensor of masked features (input)
@@ -304,7 +304,10 @@ class TSTransformerEncoderClassiregressor(nn.Module):
         inp = self.pos_enc(inp)  # add positional encoding
         # NOTE: logic for padding masks is reversed to comply with definition in MultiHeadAttention, TransformerEncoderLayer
         # output = self.transformer_encoder(inp, src_key_padding_mask=~padding_masks)  # (seq_length, batch_size, d_model) #@nipdep
-        output = self.transformer_encoder(inp, src_key_padding_mask=~padding_masks)  # (seq_length, batch_size, d_model)
+        if padding_masks:
+            output = self.transformer_encoder(inp, src_key_padding_mask=~padding_masks)  # (seq_length, batch_size, d_model)
+        else:
+            output = self.transformer_encoder(inp)  # (seq_length, batch_size, d_model)
         output = self.act(output)  # the output transformer encoder/decoder embeddings don't include non-linearity
         output = output.permute(1, 0, 2)  # (batch_size, seq_length, d_model)
         # output = self.dropout1(output)
@@ -314,7 +317,7 @@ class TSTransformerEncoderClassiregressor(nn.Module):
         # output = output.reshape(output.shape[0], -1)  # (batch_size, seq_length * d_model)
         # output = output.permute(0, 2, 1)
         # output = self.conv1d(output)
-        output = nn.AvgPool2d((300,1))(output)
+        output = nn.AvgPool2d((self.max_len,1))(output)
         output = torch.squeeze(output)
         output = nn.Dropout1d(0.1)(output)
         output = self.dense1(output)
