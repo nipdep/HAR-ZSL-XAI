@@ -1,0 +1,7 @@
+# ignore data dir 
+data/*
+tmp/*
+
+# ignore cache files 
+__pycache__
+.neptune/*
