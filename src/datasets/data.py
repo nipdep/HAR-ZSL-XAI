@@ -6,13 +6,15 @@ import pandas as pd
 from glob import glob 
 import scipy.io 
 
+from sklearn.preprocessing import MinMaxScaler
+
 # build PAMAP2 dataset data reader
 class PAMAP2Reader(object):
     def __init__(self, root_path):
         self.root_path = root_path
         self.readPamap2()
 
-    def readFile(self, file_path):
+    def readFile(self, file_path, cols):
         all_data = {"data": {}, "target": {}, 'collection': []}
         prev_action = -1
         starting = True
@@ -33,7 +35,8 @@ class PAMAP2Reader(object):
                     action_seq = []
                 else:
                     starting = False
-                data_seq = np.array(s[3:]).astype(np.float16)
+                intm_data = s[3:]
+                data_seq = np.array(intm_data)[cols].astype(np.float16)
                 # data_seq[np.isnan(data_seq)] = 0
                 action_seq.append(data_seq)
                 prev_action = int(s[1])
@@ -55,7 +58,7 @@ class PAMAP2Reader(object):
         for i, filename in enumerate(filelist):
             print('Reading file %d of %d' % (i+1, len(filelist)))
             fpath = os.path.join(self.root_path, filename)
-            file_data = self.readFile(fpath)
+            file_data = self.readFile(fpath, cols)
             data.extend(list(file_data['data'].values()))
             labels.extend(list(file_data['target'].values()))
             collection.extend(file_data['collection'])
@@ -139,7 +142,25 @@ class PAMAP2Reader(object):
 
         return all_data, all_ids, all_labels
 
-    def generate(self, unseen_classes, window_size=5.21, window_overlap=1, resample_freq=10, seen_ratio=0.2, unseen_ratio=0.8):
+    def generate(self, unseen_classes, window_size=5.21, window_overlap=1, resample_freq=10, smoothing=False, normalize=False, seen_ratio=0.2, unseen_ratio=0.8):
+        
+        def smooth(x, window_len=11, window='hanning'):
+            if x.ndim != 1:
+                    raise Exception('smooth only accepts 1 dimension arrays.')
+            if x.size < window_len:
+                    raise Exception("Input vector needs to be bigger than window size.")
+            if window_len<3:
+                    return x
+            if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+                    raise Exception("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
+            s=np.r_[2*x[0]-x[window_len-1::-1],x,2*x[-1]-x[-1:-window_len:-1]]
+            if window == 'flat': #moving average
+                    w=np.ones(window_len,'d')
+            else:  
+                    w=eval('np.'+window+'(window_len)')
+            y=np.convolve(w/w.sum(),s,mode='same')
+            return y[window_len:-window_len+1]
+
         # assert all([i in list(self.label_map.keys()) for i in unseen_classes]), "Unknown Class label!"
         seen_classes = [i for i in range(len(self.idToLabel)) if i not in unseen_classes]
         unseen_mask = np.in1d(self.targets, unseen_classes)
@@ -158,6 +179,22 @@ class PAMAP2Reader(object):
 
         seen_data, seen_targets = np.array(seen_data), np.array(seen_targets)
         unseen_data, unseen_targets = np.array(unseen_data), np.array(unseen_targets)
+
+        if normalize:
+            a, b, nft = seen_data.shape 
+            intm_sdata = seen_data.reshape((-1, nft))
+            intm_udata = unseen_data.reshape((-1, nft))
+
+            scaler = MinMaxScaler()
+            norm_sdata = scaler.fit_transform(intm_sdata)
+            norm_udata = scaler.transform(intm_udata)
+
+            seen_data = norm_sdata.reshape(seen_data.shape)
+            unseen_data = norm_udata.reshape(unseen_data.shape)
+
+        if smoothing:
+            seen_data = np.apply_along_axis(smooth, axis=1, arr=seen_data)
+            unseen_data = np.apply_along_axis(smooth, axis=1, arr=unseen_data)
         # train-val split
         seen_index = list(range(len(seen_targets)))
         random.shuffle(seen_index)
@@ -168,15 +205,15 @@ class PAMAP2Reader(object):
         
 
         data = {'train': {
-                        'X': X_seen_train[:, :, self.cols],
+                        'X': X_seen_train,
                         'y': y_seen_train
                         },
                 'eval-seen':{
-                        'X': X_seen_val[:, :, self.cols],
+                        'X': X_seen_val,
                         'y': y_seen_val
                         },
                 'test': {
-                        'X': unseen_data[:, :, self.cols],
+                        'X': unseen_data,
                         'y': unseen_targets
                         },
                 'seen_classes': seen_classes,
