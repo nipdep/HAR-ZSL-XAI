@@ -385,15 +385,15 @@ class MHEALTHReader(object):
         
 
         data = {'train': {
-                        'X': X_seen_train,
+                        'X': X_seen_train.astype(np.float32),
                         'y': y_seen_train
                         },
                 'eval-seen':{
-                        'X': X_seen_val,
+                        'X': X_seen_val.astype(np.float32),
                         'y': y_seen_val
                         },
                 'test': {
-                        'X': unseen_data,
+                        'X': unseen_data.astype(np.float32),
                         'y': unseen_targets
                         },
                 'seen_classes': seen_classes,
@@ -573,15 +573,15 @@ class UTDReader(object):
         y_seen_train, y_seen_val = seen_targets[fst_index], seen_targets[sec_index]
         
         data = {'train': {
-                        'X': X_seen_train,
+                        'X': X_seen_train.astype(np.float32),
                         'y': y_seen_train
                         },
                 'eval-seen':{
-                        'X': X_seen_val,
+                        'X': X_seen_val.astype(np.float32),
                         'y': y_seen_val
                         },
                 'test': {
-                        'X': unseen_data,
+                        'X': unseen_data.astype(np.float32),
                         'y': unseen_targets
                         },
                 'seen_classes': seen_classes,
