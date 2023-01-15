@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from skcosine_similaritylearn.metrics.pairwise import 
+from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 

@@ -94,7 +94,7 @@ def generate_classification_report(existing_class_names, precision, recall, f1, 
     return report
 
 
-def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxcharlength=35, print_report=True):
+def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxcharlength=35, print_report=True, show_plot=True):
     """
     For an array of label predictions and the respective true labels, shows confusion matrix, accuracy, recall, precision etc:
     Input:
@@ -121,11 +121,11 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     ConfMatrix_normalized_row = metrics.confusion_matrix(y_true, y_pred, normalize='true') #@nipdep
 
-    
-    plt.figure()
-    plot_confusion_matrix(ConfMatrix_normalized_row, label_strings=existing_class_names,
-                            title='Confusion matrix normalized by row')
-    plt.show(block=False)
+    if show_plot:
+        plt.figure()
+        plot_confusion_matrix(ConfMatrix_normalized_row, label_strings=existing_class_names,
+                                title='Confusion matrix normalized by row')
+        plt.show(block=False)
 
     # Analyze results
     total_accuracy = np.trace(ConfMatrix) / len(y_true)
