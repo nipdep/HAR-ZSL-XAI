@@ -33,3 +33,13 @@ class PAMAP2Dataset(Dataset):
         sampling_idx = [random.choice(self.attribute_dict[i]) for i in self.action_classes]
         ft_mat = self.attributes[sampling_idx, ...]
         return ft_mat
+
+    def getClassFeatures(self):
+        cls_feat = []
+        for cls in self.action_classes:
+            idx = self.attribute_dict[cls]
+            cls_feat.append(torch.mean(self.attributes[idx, ...], dim=0))
+
+        cls_feat = torch.vstack(cls_feat)
+        print(cls_feat.size())
+        return cls_feat

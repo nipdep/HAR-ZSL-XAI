@@ -65,6 +65,9 @@ class PAMAP2Reader(object):
                 all_data['target'][action_ID] = prev_action
         return all_data
 
+    def clean_data(self):
+        pass
+
     def readPamap2Files(self, filelist, cols, labelToId):
         data = []
         labels = []
@@ -76,7 +79,17 @@ class PAMAP2Reader(object):
             data.extend(list(file_data['data'].values()))
             labels.extend(list(file_data['target'].values()))
             collection.extend(file_data['collection'])
-        return np.asarray(data), np.asarray(labels, dtype=int), np.array(collection)
+
+        # for i, arr in enumerate(data):
+        #    if np.isinf(arr).sum() > 0 or np.isnan(arr).sum() > 0:
+        #        print(i, "inf", np.isinf(arr).sum(), "nan", np.isnan(arr).sum())
+
+        data = np.array(data)
+
+        labels = np.asarray(labels, dtype=int)
+        collection = np.array(collection).astype(np.float32)
+
+        return data, labels, collection
 
     def readPamap2(self):
         files = ['subject101.dat', 'subject102.dat', 'subject103.dat', 'subject104.dat', 'subject105.dat',
@@ -131,6 +144,11 @@ class PAMAP2Reader(object):
         # print(means.shape)
         stds = signal.std(axis=0)
         # print(stds.shape)
+        if np.isinf(means).sum():
+            means[np.isinf(means)] = 0
+
+        if np.isinf(stds).sum():
+            stds[np.isinf(stds)] = 0
         mergered = np.vstack((means, stds)).reshape((-1,), order='F')
         return mergered
 
@@ -165,7 +183,7 @@ class PAMAP2Reader(object):
 
         return all_data, all_ids, all_labels
 
-    def generate(self, unseen_classes, resampling=True, window_size=5.21, window_overlap=1, resample_freq=10,
+    def generate(self, unseen_classes, resampling=True, window_size=5.21, window_overlap: float = 1, resample_freq=10,
                  seen_ratio=0.2, unseen_ratio=0.8):
         # assert all([i in list(self.label_map.keys()) for i in unseen_classes]), "Unknown Class label!"
         seen_classes = [i for i in range(len(self.idToLabel)) if i not in unseen_classes]
@@ -188,8 +206,8 @@ class PAMAP2Reader(object):
         unseen_data, unseen_ids, unseen_targets = self.resampling(unseen_data, unseen_targets, window_size,
                                                                   window_overlap, resample_freq)
 
-        seen_data, seen_targets = np.array(seen_data), np.array(seen_targets)
-        unseen_data, unseen_targets = np.array(unseen_data), np.array(unseen_targets)
+        seen_data, seen_targets = np.array(seen_data).astype(np.float32), np.array(seen_targets)
+        unseen_data, unseen_targets = np.array(unseen_data).astype(np.float32), np.array(unseen_targets)
         # train-val split
         seen_index = list(range(len(seen_targets)))
         random.shuffle(seen_index)
@@ -225,3 +243,18 @@ class PAMAP2Reader(object):
         }
 
         return data
+
+
+if __name__ == "__main__":
+    dataReader = PAMAP2Reader('../../data/PAMAP2_Dataset/Protocol/')
+    actionList = dataReader.idToLabel
+
+    fold_classes = [['watching TV', 'house cleaning', 'standing', 'ascending stairs'],
+                    ['walking', 'rope jumping', 'sitting', 'descending stairs'],
+                    ['playing soccer', 'lying', 'vacuum cleaning', 'computer work'],
+                    ['cycling', 'running', 'Nordic walking'], ['ironing', 'car driving', 'folding laundry']]
+
+    fold_cls_ids = [[actionList.index(i) for i in j] for j in fold_classes]
+
+    data_dict = dataReader.generate(unseen_classes=fold_cls_ids[0], seen_ratio=0.2, unseen_ratio=0.8, window_size=5.21,
+                                    window_overlap=4.21, resample_freq=20)
