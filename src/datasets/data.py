@@ -265,13 +265,13 @@ class PAMAP2ReaderV2(object):
                         df = pd.DataFrame(action_seq)
                         intep_df = df.interpolate(method='linear', limit_direction='backward', axis=0)
                         intep_data = intep_df.values
-                        all_data['data'][action_ID] = np.array(intep_data)
+                        all_data['data'][action_ID] = np.array(intep_data,dtype=np.float64)
                         all_data['target'][action_ID] = prev_action
                         action_ID += 1
                     action_seq = []
                 else:
                     starting = False
-                data_seq = np.array(s[3:])[cols].astype(np.float16)
+                data_seq = np.array(s[3:])[cols].astype(np.float64)
                 # data_seq[np.isnan(data_seq)] = 0
                 action_seq.append(data_seq)
                 prev_action = int(s[1])
@@ -347,11 +347,11 @@ class PAMAP2ReaderV2(object):
         means = signal.mean(axis=0)
         stds = signal.std(axis=0)
 
-        if np.isinf(means).sum():
-            means[np.isinf(means)] = 0
+        #if np.isinf(means).sum():
+        #    means[np.isinf(means)] = 0
 
-        if np.isinf(stds).sum():
-            stds[np.isinf(stds)] = 0
+        #if np.isinf(stds).sum():
+        #    stds[np.isinf(stds)] = 0
 
         mergered = np.vstack((means, stds)).reshape((-1,), order='F')
         # print(signal.shape, means.shape, stds.shape, mergered.shape)
