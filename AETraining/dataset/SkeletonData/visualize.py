@@ -53,7 +53,7 @@ def gen_skeleton(frame, connections, height, width):
         en = frame[j, :]
         end_point = (int(width * en[0]), int(height * en[1]))
 
-        img3_ = cv2.line(img_3, start_point, end_point, color=(0, 0, 0), thickness=3)
+        img_3 = cv2.line(img_3, start_point, end_point, color=(0, 0, 0), thickness=3)
 
     return img_3
 

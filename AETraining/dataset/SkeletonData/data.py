@@ -149,21 +149,27 @@ class SkeletonPickleReader(SkeletonFile):
         self.annotations = None
         self.splits = None
 
-    def generate(self):
-        self.load_data()
+    def generate(self, split=True):
+        self.load_data(split=split)
         self.ann_list_dict()
 
-        return self.splits, self.annotations
+        if split:
+            return self.splits, self.annotations
+
+        return self.annotations
 
     def ann_list_dict(self, key="frame_dir"):
         self.annotations = {v[key]: v for v in self.annotations}
         gc.collect()
 
-    def load_data(self):
+    def load_data(self, split=True):
         with open(self.file_path, "rb") as pkl_file:
             pkl = pickle.load(pkl_file)
-            self.splits = pkl["split"]
-            self.annotations = pkl["annotations"]
+            if split:
+                self.splits = pkl["split"]
+                self.annotations = pkl["annotations"]
+            else:
+                self.annotations = pkl
 
 
 class FileDictIterator:

@@ -3,10 +3,14 @@ import numpy as np
 import random
 
 
+def normalize_array(arr, video_size):
+    arr[:, :, 0] = arr[:, :, 0] / video_size[1]
+    arr[:, :, 1] = arr[:, :, 1] / video_size[0]
+
+
 def normalize_arrays(arrays, video_size):
     for arr in arrays:
-        arr[:, :, 0] = arr[:, :, 0] / video_size[1]
-        arr[:, :, 1] = arr[:, :, 1] / video_size[0]
+        normalize_array(arr, video_size)
 
     return arrays
 
@@ -54,21 +58,25 @@ def classname_id(class_name_list):
 
 
 def split_array_main(id2shapes: dict, refined_data: str, each_file: dict):
-    coords, vid_size = each_file["keypoint"][0], id2shapes[each_file["frame_dir"]]
-    # if (coords[:, :, 0] > 1).sum() > 0 or (coords[:, :, 1] > 1).sum() > 0:
-    #    return each_file["frame_dir"]
+    try:
+        coords, vid_size = each_file["keypoint"][0], id2shapes[each_file["frame_dir"]]
+        # if (coords[:, :, 0] > 1).sum() > 0 or (coords[:, :, 1] > 1).sum() > 0:
+        #    return each_file["frame_dir"]
 
-    if (coords[:, :, 0] < 0).sum() > 0 or (coords[:, :, 1] < 0).sum() > 0:
-        return each_file["frame_dir"]
+        if (coords[:, :, 0] < 0).sum() > 0 or (coords[:, :, 1] < 0).sum() > 0:
+            return "Negative Values", each_file["frame_dir"]
 
-    f_point = random_break_into_time_frames(coords, time_window=100)
+        f_point = random_break_into_time_frames(coords, time_window=100)
 
-    # print(path_parts)
-    class_n = each_file["label"]
-    file_id = each_file["frame_dir"]
+        # print(path_parts)
+        class_n = each_file["label"]
+        file_id = each_file["frame_dir"]
 
-    if len(f_point) > 0:
-        f_point = normalize_arrays(f_point, vid_size)
-        # gen_video(f_point[0], "check_vid.mp4", 400, 400)
-        save_arrays(refined_data, file_id, class_n, f_point, vid_size)
-        return each_file["frame_dir"]
+        if len(f_point) > 0:
+            f_point = normalize_arrays(f_point, vid_size)
+            # gen_video(f_point[0], "check_vid.mp4", 400, 400)
+            save_arrays(refined_data, file_id, class_n, f_point, vid_size)
+            return each_file["frame_dir"]
+
+    except IndexError:
+        return "Index Error", each_file["frame_dir"]
