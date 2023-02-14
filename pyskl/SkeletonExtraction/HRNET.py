@@ -90,9 +90,6 @@ def gen_video_list(file_path: str):
     return annotations
 
 
-
-
-
 def HRNetExtraction(anno, det_score_thr=0.7, det_area_thr=1600):
     frames = extract_frame(anno['file_path'])
     det_results = detection_inference(det_model, frames)
@@ -181,3 +178,8 @@ def inference_detectorV2(model, imgs):
         return results[0]
     else:
         return results
+
+
+if __name__ == "__main__":
+    video_paths = "../../data/nipun_video_dataset/PAMAP2_K10_V1"
+    vid_list = gen_video_list(video_paths)
