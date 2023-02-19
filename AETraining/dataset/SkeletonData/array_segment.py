@@ -57,6 +57,67 @@ def classname_id(class_name_list):
     return id2classname, classname2id
 
 
+def break_from_middle(coords, time_window=50):
+    coords_mid_point = coords.shape[0] // 2
+    time_window_half = time_window // 2
+
+    if coords_mid_point - time_window_half < 0:
+        return []
+    else:
+        return [coords[coords_mid_point - time_window_half:coords_mid_point + time_window_half, :, :]]
+
+
+def split_array_from_builder(refined_data: str, shapes, each_file):
+    file_id = each_file.filepath.split(os.path.sep)[-1].split(".")[0]
+    num_frame, body_data = each_file.load_data()
+    orig_vid_size = shapes[file_id]
+    for frame_data in body_data:
+        if frame_data["body_count"] != 1:
+            return {
+                "status": False,
+                "Reason": "Body Count is higher than 1",
+                "file_id": file_id
+            }
+    skel_data = []
+    for frame_data in body_data:
+        frame_jd = []
+        for jd in frame_data["bodies"][0]["joint_details"]:
+            x = jd["colorX"] / orig_vid_size[1]
+            y = jd["colorY"] / orig_vid_size[0]
+
+            frame_jd.append([x, y])
+
+        skel_data.append(frame_jd)
+
+    skel_data = np.asarray(skel_data)
+
+    if (skel_data[:, :, 0] < 0).sum() > 0 or (skel_data[:, :, 1] < 0).sum() > 0:
+        return {
+            "status": False,
+            "Reason": "Negative Values",
+            "file_id": file_id
+        }
+
+    f_point = break_from_middle(skel_data, time_window=50)
+
+    class_n = str(int(file_id.split("A")[-1]))
+    file_id = file_id
+
+    if len(f_point) > 0:
+        save_arrays(refined_data, file_id, class_n, f_point, orig_vid_size)
+        return {
+            "status": True,
+            "Reason": None,
+            "file_id": file_id
+        }
+    else:
+        return {
+            "status": False,
+            "Reason": "Array Empty",
+            "file_id": file_id
+        }
+
+
 def split_array_main(id2shapes: dict, refined_data: str, each_file: dict):
     try:
         coords, vid_size = each_file["keypoint"][0], id2shapes[each_file["frame_dir"]]
@@ -66,7 +127,7 @@ def split_array_main(id2shapes: dict, refined_data: str, each_file: dict):
         if (coords[:, :, 0] < 0).sum() > 0 or (coords[:, :, 1] < 0).sum() > 0:
             return "Negative Values", each_file["frame_dir"]
 
-        f_point = random_break_into_time_frames(coords, time_window=100)
+        f_point = random_break_into_time_frames(coords, time_window=70)
 
         # print(path_parts)
         class_n = each_file["label"]
