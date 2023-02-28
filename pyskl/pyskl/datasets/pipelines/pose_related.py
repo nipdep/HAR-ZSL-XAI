@@ -112,7 +112,7 @@ class RandomScale:
         skeleton = results['keypoint']
         scale = self.scale
         if isinstance(scale, float):
-            scale = (scale, ) * skeleton.shape[-1]
+            scale = (scale,) * skeleton.shape[-1]
         assert len(scale) == skeleton.shape[-1]
         scale = 1 + np.random.uniform(-1, 1, size=len(scale)) * np.array(scale)
         results['keypoint'] = skeleton * scale
@@ -197,8 +197,8 @@ class PreNormalize3D:
         aa, bb, cc, dd = a * a, b * b, c * c, d * d
         bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
         return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
-                        [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
-                        [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
+                         [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
+                         [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
 
     def __init__(self, zaxis=[0, 1], xaxis=[8, 4], align_spine=True, align_center=True):
         self.zaxis = zaxis
@@ -410,7 +410,7 @@ class FormatGCNInput:
         # M T V C
         if keypoint.shape[0] < self.num_person:
             pad_dim = self.num_person - keypoint.shape[0]
-            pad = np.zeros((pad_dim, ) + keypoint.shape[1:], dtype=keypoint.dtype)
+            pad = np.zeros((pad_dim,) + keypoint.shape[1:], dtype=keypoint.dtype)
             keypoint = np.concatenate((keypoint, pad), axis=0)
             if self.mode == 'loop' and keypoint.shape[0] == 1:
                 for i in range(1, self.num_person):
@@ -432,15 +432,13 @@ class FormatGCNInput:
 
 
 @PIPELINES.register_module()
-class DecompressPose:
+class DecompressPoseLocalFiles:
     """Load Compressed Pose
-
     In compressed pose annotations, each item contains the following keys:
     Original keys: 'label', 'frame_dir', 'img_shape', 'original_shape', 'total_frames'
     New keys: 'frame_inds', 'keypoint', 'anno_inds'.
     This operation: 'frame_inds', 'keypoint', 'total_frames', 'anno_inds'
          -> 'keypoint', 'keypoint_score', 'total_frames'
-
     Args:
         squeeze (bool): Whether to remove frames with no human pose. Default: True.
         max_person (int): The max number of persons in a frame, we keep skeletons with scores from high to low.
@@ -482,7 +480,103 @@ class DecompressPose:
 
         results['total_frames'] = total_frames
 
-        num_joints = keypoint.shape[1]
+        num_joints = keypoint.shape[2]
+        num_person = get_mode(frame_inds)[-1][0]
+
+        new_kp = np.zeros([num_person, total_frames, num_joints, 2], dtype=np.float16)
+        new_kpscore = np.zeros([num_person, total_frames, num_joints], dtype=np.float16)
+        # 32768 is enough
+        nperson_per_frame = np.zeros([total_frames], dtype=np.int16)
+
+        try:
+            keypoint[0]
+
+        except IndexError:
+            print("file name ", results["frame_dir"],
+                  "num_joints:-", num_joints,
+                  "num_person:-", num_person,
+                  "kp.shape:-", keypoint.shape,
+                  "new kp.shape:-", new_kp.shape,
+                  "new kp_score.shape:-", new_kpscore.shape,
+                  "nperson_per_frame", nperson_per_frame, sep="\n")
+
+        for frame_ind, kp in zip(frame_inds, keypoint[0]):
+            person_ind = nperson_per_frame[frame_ind]
+            # print(new_kp[person_ind, frame_ind].shape, kp.shape)
+            new_kp[person_ind, frame_ind] = kp[:, :2]
+            new_kpscore[person_ind, frame_ind] = results['keypoint_score'][person_ind, frame_ind]
+            nperson_per_frame[frame_ind] += 1
+
+        if num_person > self.max_person:
+            for i in range(total_frames):
+                nperson = nperson_per_frame[i]
+                val = new_kpscore[:nperson, i]
+                score_sum = val.sum(-1)
+
+                inds = sorted(range(nperson), key=lambda x: -score_sum[x])
+                new_kpscore[:nperson, i] = new_kpscore[inds, i]
+                new_kp[:nperson, i] = new_kp[inds, i]
+            num_person = self.max_person
+            results['num_person'] = num_person
+
+        results['keypoint'] = new_kp[:num_person]
+        results['keypoint_score'] = new_kpscore[:num_person]
+        return results
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(squeeze={self.squeeze}, max_person={self.max_person})'
+
+
+@PIPELINES.register_module()
+class DecompressPose:
+    """Load Compressed Pose
+    In compressed pose annotations, each item contains the following keys:
+    Original keys: 'label', 'frame_dir', 'img_shape', 'original_shape', 'total_frames'
+    New keys: 'frame_inds', 'keypoint', 'anno_inds'.
+    This operation: 'frame_inds', 'keypoint', 'total_frames', 'anno_inds'
+         -> 'keypoint', 'keypoint_score', 'total_frames'
+    Args:
+        squeeze (bool): Whether to remove frames with no human pose. Default: True.
+        max_person (int): The max number of persons in a frame, we keep skeletons with scores from high to low.
+            Default: 10.
+    """
+
+    def __init__(self,
+                 squeeze=True,
+                 max_person=10):
+
+        self.squeeze = squeeze
+        self.max_person = max_person
+
+    def __call__(self, results):
+
+        required_keys = ['total_frames', 'frame_inds', 'keypoint']
+        for k in required_keys:
+            assert k in results
+
+        total_frames = results['total_frames']
+        frame_inds = results.pop('frame_inds')
+        keypoint = results['keypoint']
+
+        if 'anno_inds' in results:
+            frame_inds = frame_inds[results['anno_inds']]
+            keypoint = keypoint[results['anno_inds']]
+
+        assert np.all(np.diff(frame_inds) >= 0), 'frame_inds should be monotonical increasing'
+
+        def mapinds(inds):
+            uni = np.unique(inds)
+            map_ = {x: i for i, x in enumerate(uni)}
+            inds = [map_[x] for x in inds]
+            return np.array(inds, dtype=np.int16)
+
+        if self.squeeze:
+            frame_inds = mapinds(frame_inds)
+            total_frames = np.max(frame_inds) + 1
+
+        results['total_frames'] = total_frames
+
+        num_joints = keypoint.shape[2]
         num_person = get_mode(frame_inds)[-1][0]
 
         new_kp = np.zeros([num_person, total_frames, num_joints, 2], dtype=np.float16)
@@ -513,4 +607,4 @@ class DecompressPose:
         return results
 
     def __repr__(self):
-        return (f'{self.__class__.__name__}(squeeze={self.squeeze}, max_person={self.max_person})')
+        return f'{self.__class__.__name__}(squeeze={self.squeeze}, max_person={self.max_person})'

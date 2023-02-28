@@ -90,7 +90,6 @@ class PoseDataset(BaseDataset):
 
     def load_pkl_annotations(self):
         data = mmcv.load(self.ann_file)
-
         if self.split:
             split, data = data['split'], data['annotations']
             identifier = 'filename' if 'filename' in data[0] else 'frame_dir'

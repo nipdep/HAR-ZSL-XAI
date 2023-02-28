@@ -80,6 +80,47 @@ class Rename:
 
 
 @PIPELINES.register_module()
+class CollectLocalFiles:
+    def __init__(self,
+                 keys,
+                 meta_keys=('filename', 'label', 'original_shape', 'img_shape',
+                            'pad_shape', 'flip_direction', 'img_norm_cfg'),
+                 meta_name='img_metas',
+                 nested=False):
+        self.keys = keys
+        self.meta_keys = meta_keys
+        self.meta_name = meta_name
+        self.nested = nested
+
+    def __call__(self, results):
+        """Performs the Collect formatting.
+
+        Args:
+            results (dict): The resulting dict to be modified and passed
+                to the next transform in pipeline.
+        """
+        data = {}
+        for key in self.keys:
+            data[key] = results[key]
+
+        if len(self.meta_keys) != 0:
+            meta = {}
+            for key in self.meta_keys:
+                meta[key] = results[key]
+            # data[self.meta_name] = DC(meta, cpu_only=True)
+        if self.nested:
+            for k in data:
+                data[k] = [data[k]]
+
+        return data
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('
+                f'keys={self.keys}, meta_keys={self.meta_keys}, '
+                f'nested={self.nested})')
+
+
+@PIPELINES.register_module()
 class Collect:
     """Collect data from the loader relevant to the specific task.
 
@@ -195,7 +236,7 @@ class FormatShape(object):
                 # N_crops x N_clips x L x H x W x C
                 imgs = np.transpose(imgs, (0, 1, 5, 2, 3, 4))
                 # N_crops x N_clips x C x L x H x W
-                imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+                imgs = imgs.reshape((-1,) + imgs.shape[2:])
                 # M' x C x L x H x W
                 # M' = N_crops x N_clips
                 results['imgs'] = imgs
@@ -212,7 +253,7 @@ class FormatShape(object):
                 # N_crops x N_clips x L x C x H x W
                 imgs = np.transpose(imgs, (0, 1, 3, 2, 4, 5))
                 # N_crops x N_clips x C x L x H x W
-                imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+                imgs = imgs.reshape((-1,) + imgs.shape[2:])
                 # M' x C x L x H x W
                 # M' = N_crops x N_clips
                 results['heatmap_imgs'] = imgs
@@ -235,7 +276,7 @@ class FormatShape(object):
                 # N_crops x N_clips x L x C x H x W
                 imgs = np.transpose(imgs, (0, 1, 3, 2, 4, 5))
                 # N_crops x N_clips x C x L x H x W
-                imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+                imgs = imgs.reshape((-1,) + imgs.shape[2:])
                 # M' x C x L x H x W
                 # M' = N_crops x N_clips
                 results['imgs'] = imgs

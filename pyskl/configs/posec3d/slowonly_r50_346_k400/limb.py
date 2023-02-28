@@ -5,7 +5,7 @@ model = dict(
         in_channels=17,
         base_channels=32,
         num_stages=3,
-        out_indices=(2, ),
+        out_indices=(2,),
         stage_blocks=(3, 4, 6),
         conv1_stride=(1, 1),
         pool1_stride=(1, 1),
@@ -19,10 +19,10 @@ model = dict(
         dropout=0.5),
     test_cfg=dict(average_clips='prob'))
 
-memcached = True
+memcached = False
 mc_cfg = ('localhost', 22077)
 dataset_type = 'PoseDataset'
-ann_file = 'data/k400/k400_hrnet.pkl'
+ann_file = 'HRNetSkeletons/nipun_video_dataset/PAMAP2_K10_V1/combined_with_split.pkl'
 left_kp = [1, 3, 5, 7, 9, 11, 13, 15]
 right_kp = [2, 4, 6, 8, 10, 12, 14, 16]
 skeletons = [[0, 5], [0, 6], [5, 7], [7, 9], [6, 8], [8, 10], [5, 11],
@@ -59,13 +59,13 @@ val_pipeline = [
     dict(type='ToTensor', keys=['imgs'])
 ]
 test_pipeline = [
-    dict(type='DecompressPose', squeeze=True),
+    dict(type='DecompressPoseLocalFiles', squeeze=True),
     dict(type='UniformSampleFrames', clip_len=48, num_clips=10),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(64, 64), keep_ratio=False),
     dict(type='GeneratePoseTarget', with_kp=False, with_limb=True, double=True,
-        left_kp=left_kp, right_kp=right_kp, left_limb=left_limb, right_limb=right_limb, skeletons=skeletons),
+         left_kp=left_kp, right_kp=right_kp, left_limb=left_limb, right_limb=right_limb, skeletons=skeletons),
     dict(type='FormatShape', input_format='NCTHW_Heatmap'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
     dict(type='ToTensor', keys=['imgs'])
@@ -89,7 +89,7 @@ data = dict(
     val=dict(
         type=dataset_type,
         ann_file=ann_file,
-        split='val',
+        split='test',
         pipeline=val_pipeline,
         box_thr=box_thr,
         memcached=memcached,
@@ -97,7 +97,7 @@ data = dict(
     test=dict(
         type=dataset_type,
         ann_file=ann_file,
-        split='val',
+        split='test',
         pipeline=test_pipeline,
         box_thr=box_thr,
         memcached=memcached,
