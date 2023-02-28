@@ -98,6 +98,13 @@ def split_array_from_builder(refined_data: str, shapes, each_file):
             "file_id": file_id
         }
 
+    if np.isnan(skel_data).sum() > 0 or np.isinf(skel_data).sum() > 0:
+        return {
+            "status": False,
+            "Reason": "Negative Values",
+            "file_id": file_id
+        }
+
     f_point = break_from_middle(skel_data, time_window=50)
 
     class_n = str(int(file_id.split("A")[-1]))
