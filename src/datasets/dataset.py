@@ -41,5 +41,4 @@ class PAMAP2Dataset(Dataset):
             cls_feat.append(torch.mean(self.attributes[idx, ...], dim=0))
 
         cls_feat = torch.vstack(cls_feat)
-        print(cls_feat.size())
         return cls_feat
