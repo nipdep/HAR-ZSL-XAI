@@ -476,7 +476,7 @@ class UTDReader(object):
         collection = []
         
         for p in glob(f'{self.root_path}/*.mat'):
-            file_name = p.split('\\')[-1]
+            file_name = p.split('/')[-1]
             action, subject, time, _ = file_name.split('_')
             mat = scipy.io.loadmat(p)
             # data, frame = self.dataTableOptimizerUpdated(mat_file=mat)
@@ -1638,7 +1638,7 @@ class SUReader(object):
         collection = []
         
         for p in glob(f'{self.root_path}/*.mat'):
-            file_name = p.split('\\')[-1]
+            file_name = p.split('/')[-1]
             action, subject, time, _ = file_name.split('_')
             mat = scipy.io.loadmat(p)
             # data, frame = self.dataTableOptimizerUpdated(mat_file=mat)
