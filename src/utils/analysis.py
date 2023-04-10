@@ -150,4 +150,4 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     # Make a histogram with the distribution of classes with respect to precision and recall
     # prec_rec_histogram(precision, recall)
 
-    return {"total_accuracy": total_accuracy, "precision": precision.mean(), "recall": recall.mean(), "f1": f1.mean()}
+    return {"accuracy": total_accuracy, "precision": precision.mean(), "recall": recall.mean(), "f1": f1.mean()}

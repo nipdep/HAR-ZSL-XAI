@@ -28,7 +28,7 @@ class PAMAP2Reader(object):
                         df = pd.DataFrame(action_seq)
                         intep_df = df.interpolate(method='linear', limit_direction='backward', axis=0)
                         intep_data = intep_df.values 
-                        all_data['data'][action_ID] = np.array(intep_data)
+                        all_data['data'][action_ID] = np.array(intep_data)[500:-500, :]
                         all_data['target'][action_ID] = prev_action
                         action_ID+=1
                     action_seq = []
@@ -196,7 +196,7 @@ class PAMAP2Reader(object):
             unseen_data = np.apply_along_axis(smooth, axis=1, arr=unseen_data)
         # train-val split
         seen_index = list(range(len(seen_targets)))
-        random.shuffle(seen_index)
+        # random.shuffle(seen_index)
         split_point = int((1-seen_ratio)*len(seen_index))
         fst_index, sec_index = seen_index[:split_point], seen_index[split_point:]
         # print(type(fst_index), type(sec_index), type(seen_data), type(seen_targets))
