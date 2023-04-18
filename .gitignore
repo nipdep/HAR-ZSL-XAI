@@ -168,3 +168,4 @@ epoch_vids
 embedding_save
 prototypes
 pyskl/HRNetSkeletons
+AETraining/checking_vids

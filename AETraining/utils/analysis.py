@@ -119,7 +119,7 @@ def action_evaluator(y_pred, y_true, class_names, excluded_classes=None, maxchar
     ConfMatrix = metrics.confusion_matrix(y_true, y_pred)
 
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
-    ConfMatrix_normalized_row = metrics.confusion_matrix(y_true, y_pred, normalize='true') #@nipdep
+    ConfMatrix_normalized_row = metrics.confusion_matrix(y_true, y_pred, normalize='true') 
 
     if show_plot:
         plt.figure()
