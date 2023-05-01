@@ -1,0 +1,10 @@
+# ignore temp and cache files 
+*.pyc 
+__pycache__/
+
+# ignore data dir 
+/data
+/cache 
+/figure 
+/script
+
