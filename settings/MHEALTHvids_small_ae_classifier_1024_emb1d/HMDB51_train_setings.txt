@@ -1,0 +1,177 @@
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc21.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds5.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw14.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w5.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc17.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw8.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r5.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w9.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l4.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc2.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r3.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj18.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as16.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj9.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc18.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw18.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as13.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw10.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i21.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i13.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj20.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l16.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd19.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl13.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw10.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i12.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i26.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps5.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds1.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps10.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps9.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w18.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc5.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt20.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt2.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw1.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw24.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r1.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as8.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit6.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i16.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl2.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds9.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as9.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl16.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt19.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj5.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw23.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l10.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds18.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc9.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit1.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw16.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r15.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl6.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds13.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj15.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps12.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l3.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl10.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc20.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c10.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds12.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw11.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as15.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc11.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt24.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s11.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as7.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt18.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw17.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as18.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds7.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc25.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r13.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt4.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw2.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit12.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw13.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc11.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps3.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc13.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c6.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s1.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps1.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as10.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s7.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj1.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt21.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc22.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit7.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd6.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj6.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w23.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl18.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd2.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit10.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl8.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd16.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc7.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s15.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc3.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit9.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw5.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i32.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd14.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i19.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w26.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl4.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c16.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw20.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s10.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r16.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w17.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl12.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt23.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw19.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s12.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd13.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w20.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps7.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l12.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw6.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as14.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd5.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc7.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/folding laundry/fl5.mp4   folding laundry
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l18.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l17.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt16.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps20.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w7.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i7.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit8.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ascending stairs/as12.mp4   ascending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l13.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit11.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/sitting/sit5.mp4   sitting
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc9.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc19.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l11.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r18.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd18.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i4.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c4.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds10.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c20.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/lying/l20.mp4   lying
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/Nordic walking/nw3.mp4   Nordic walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/watching TV/wt25.mp4   watching TV
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w15.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r9.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd9.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/ironing/i28.mp4   ironing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj14.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c18.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj3.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r12.mp4   running
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/car driving/cd11.mp4   car driving
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps13.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s9.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw18.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/house cleaning/hc5.mp4   house cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/playing soccer/ps18.mp4   playing soccer
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds22.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/rope jumping/rj13.mp4   rope jumping
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/standing/s13.mp4   standing
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c17.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/descending stairs/ds20.mp4   descending stairs
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc15.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c2.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c14.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/walking/w13.mp4   walking
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/cycling/c9.mp4   cycling
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/vacuum cleaning/vc2.mp4   vacuum cleaning
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/computer work/cw6.mp4   computer work
+D:\FYP\HAR-ZSL-XAI\AETraining\videomae\Videos\PAMPA2/running/r20.mp4   running

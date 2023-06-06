@@ -169,3 +169,8 @@ embedding_save
 prototypes
 pyskl/HRNetSkeletons
 AETraining/checking_vids
+AETraining/videomae/reconstructed
+AETraining/videomae/videomae_pretrained_weights
+AETraining/videomae/Videos
+AETraining/videomae/.neptune
+AETraining/.neptune
