@@ -2592,3 +2592,207 @@ class SMReader(object):
                 }
 
         return data
+    
+
+# build MHEALTH dataset data reader
+class MHEALTHReaderV3(object):
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.readMH()
+
+    def readMHFiles(self, data_df):
+        data, labels, subjects, collection = [], [], [], []
+
+        prev_action = -1
+        prev_subject = -1
+        starting = True
+        # action_seq = []
+        action_ID = 0
+
+        for i, s in data_df.iterrows():
+            if str(s[12]) != "0":
+                if (prev_action != int(s[12])):
+                    if not(starting):
+                        data.append(np.array(action_seq))
+                        labels.append(prev_action)
+                        subjects.append(prev_subject)
+                        action_ID+=1
+                    action_seq = []
+                else:
+                    starting = False
+
+                data_seq = s[:12].values
+                # data_seq[np.isnan(data_seq)] = 0
+                action_seq.append(data_seq)
+                prev_action = int(s[12])
+                prev_subject = s[13]
+                # print(prev_action)
+                collection.append(data_seq)
+        else: 
+            if len(action_seq) > 1:
+                data.append(np.array(action_seq))
+                labels.append(prev_action)
+                subjects.append(prev_subject)
+        return np.asarray(data), np.asarray(labels, dtype=int), np.asarray(subjects, dtype=str), np.array(collection)
+
+    def readMH(self):  
+        label_map = [
+            #(0, 'other'),
+            (1, 'Standing still'),
+            (2, 'Sitting and relaxing'),
+            (3, 'Lying down'),
+            (4, 'Walking'),
+            (5, 'Climbing stairs'),
+            (6, 'Waist bends forward'),
+            (7, 'Frontal elevation of arms'), 
+            (8, 'Knees bending (crouching)'),
+            (9, 'Cycling'),
+            (10, 'Jogging'),
+            (11, 'Running'),
+            (12, 'Jump front & back')
+        ]
+        labelToId = {x[0]: i for i, x in enumerate(label_map)}
+        # print "label2id=",labelToId
+        idToLabel = [x[1] for x in label_map]
+        # print "id2label=",idToLabel
+        cols = [0,1,2,3,4,5,6,7,8,9,10,11]
+        self.cols = cols
+        self.df = pd.read_csv(self.file_path)
+        # print "cols",cols
+        self.data, self.targets, self.subjects, self.all_data = self.readMHFiles(self.df)
+        # self.data = self.data[:, :, cols]
+        # print(self.data)
+        # nan_perc = np.isnan(self.data).astype(int).mean()
+        # print("null value percentage ", nan_perc)
+        # f = lambda x: labelToId[x]
+        self.targets = np.array([labelToId[i] for i in list(self.targets)])
+        # print(type(self.subjects), self.subjects.shape, self.subjects)
+        self.label_map = label_map
+        self.idToLabel = idToLabel
+        # return data, idToLabel
+
+    def resample(self, signal, freq=10):
+        step_size = int(100/freq)
+        seq_len, _ = signal.shape 
+        resample_indx = np.arange(0, seq_len, step_size)
+        resampled_sig = signal[resample_indx, :]
+        return resampled_sig
+
+    def windowing(self, signal, window_len, overlap):
+        seq_len = int(window_len*100) # 100Hz compensation 
+        overlap_len = int(overlap*100) # 100Hz
+        l, _ = signal.shape
+        if l > seq_len:
+            windowing_points = np.arange(start=0, stop=l-seq_len, step=seq_len-overlap_len, dtype=int)[:-1]
+
+            windows = [signal[p:p+seq_len, :] for p in windowing_points]
+        else:
+            windows = []
+        return windows
+
+    def resampling(self, data, targets, subjects, window_size, window_overlap, resample_freq):
+        assert len(data) == len(targets), "# action data & # action labels are not matching"
+        all_data, all_ids, all_labels , all_subjects= [], [], [], []
+        for i, d in enumerate(data):
+            # print(">>>>>>>>>>>>>>>  ", np.isnan(d).mean())
+            label = targets[i]
+            subject = subjects[i]
+            windows = self.windowing(d, window_size, window_overlap)
+            for w in windows:
+                # print(np.isnan(w).mean(), label, i)
+                resample_sig = self.resample(w, resample_freq)
+                # print(np.isnan(resample_sig).mean(), label, i)
+                all_data.append(resample_sig)
+                all_ids.append(i+1)
+                all_labels.append(label)
+                all_subjects.append(subject)
+
+        return all_data, all_ids, all_labels, all_subjects
+
+    def generate(self, unseen_classes, window_size=5.21, window_overlap=1, resample_freq=10, smoothing=False, normalize=False, seen_ratio=0.2, unseen_ratio=0.8):
+        
+        def smooth(x, window_len=11, window='hanning'):
+            if x.ndim != 1:
+                    raise Exception('smooth only accepts 1 dimension arrays.')
+            if x.size < window_len:
+                    raise Exception("Input vector needs to be bigger than window size.")
+            if window_len<3:
+                    return x
+            if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+                    raise Exception("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
+            s=np.r_[2*x[0]-x[window_len-1::-1],x,2*x[-1]-x[-1:-window_len:-1]]
+            if window == 'flat': #moving average
+                    w=np.ones(window_len,'d')
+            else:  
+                    w=eval('np.'+window+'(window_len)')
+            y=np.convolve(w/w.sum(),s,mode='same')
+            return y[window_len:-window_len+1]
+
+        # assert all([i in list(self.label_map.keys()) for i in unseen_classes]), "Unknown Class label!"
+        seen_classes = [i for i in range(len(self.idToLabel)) if i not in unseen_classes]
+        unseen_mask = np.in1d(self.targets, unseen_classes)
+
+        # build seen dataset 
+        seen_data = self.data[np.invert(unseen_mask)]
+        seen_targets = self.targets[np.invert(unseen_mask)]
+        seen_subjects = self.subjects[np.invert(unseen_mask)]
+        print(f"data shape : {self.data.shape}, seen_data shape : {seen_data.shape}")
+        ids, cnts = np.unique(self.targets, return_counts=True)
+        print({self.idToLabel[ids[e]]: cnts[e] for e in range(len(ids))})
+
+        # build unseen dataset
+        unseen_data = self.data[unseen_mask]
+        unseen_targets = self.targets[unseen_mask]
+        unseen_subjects = self.subjects[unseen_mask]
+
+        # resampling seen and unseen datasets 
+        seen_data, seen_ids, seen_targets, seen_subjects = self.resampling(seen_data, seen_targets, seen_subjects, window_size, window_overlap, resample_freq)
+        unseen_data, unseen_ids, unseen_targets, unseen_subjects = self.resampling(unseen_data, unseen_targets, unseen_subjects, window_size, window_overlap, resample_freq)
+
+        seen_data, seen_targets, seen_subjects = np.array(seen_data), np.array(seen_targets), np.array(seen_subjects)
+        unseen_data, unseen_targets, unseen_subjects = np.array(unseen_data), np.array(unseen_targets), np.array(unseen_subjects)
+
+        if normalize:
+            a, b, nft = seen_data.shape 
+            intm_sdata = seen_data.reshape((-1, nft))
+            intm_udata = unseen_data.reshape((-1, nft))
+
+            scaler = MinMaxScaler()
+            norm_sdata = scaler.fit_transform(intm_sdata)
+            norm_udata = scaler.transform(intm_udata)
+
+            seen_data = norm_sdata.reshape(seen_data.shape)
+            unseen_data = norm_udata.reshape(unseen_data.shape)
+
+        if smoothing:
+            seen_data = np.apply_along_axis(smooth, axis=1, arr=seen_data)
+            unseen_data = np.apply_along_axis(smooth, axis=1, arr=unseen_data)
+        # train-val split
+        seen_index = list(range(len(seen_targets)))
+        random.shuffle(seen_index)
+        split_point = int((1-seen_ratio)*len(seen_index))
+        fst_index, sec_index = seen_index[:split_point], seen_index[split_point:]
+        # print(type(fst_index), type(sec_index), type(seen_data), type(seen_targets))
+        X_seen_train, X_seen_val, y_seen_train, y_seen_val, subject_seen_train, subject_seen_val = seen_data[fst_index,:], seen_data[sec_index,:], seen_targets[fst_index], seen_targets[sec_index], seen_subjects[fst_index], seen_subjects[sec_index]
+        
+
+        data = {'train': {
+                        'X': X_seen_train,
+                        'y': y_seen_train,
+                        'subject': subject_seen_train
+                        },
+                'eval-seen':{
+                        'X': X_seen_val,
+                        'y': y_seen_val,
+                        'subject': subject_seen_val
+                        },
+                'test': {
+                        'X': unseen_data,
+                        'y': unseen_targets,
+                        'subject': unseen_subjects
+                        },
+                'seen_classes': seen_classes,
+                'unseen_classes': unseen_classes
+                }
+
+        return data
