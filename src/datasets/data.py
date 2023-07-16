@@ -2595,13 +2595,15 @@ class SMReader(object):
     
 
 # build MHEALTH dataset data reader
+# build MHEALTH dataset data reader
 class MHEALTHReaderV3(object):
     def __init__(self, file_path):
         self.file_path = file_path
+        self.ts = 0
         self.readMH()
 
     def readMHFiles(self, data_df):
-        data, labels, subjects, collection = [], [], [], []
+        data, labels, subjects, tss, collection = [], [], [], [], []
 
         prev_action = -1
         prev_subject = -1
@@ -2610,22 +2612,26 @@ class MHEALTHReaderV3(object):
         action_ID = 0
 
         for i, s in data_df.iterrows():
-            if str(s[12]) != "0":
-                if (prev_action != int(s[12])):
+            if str(s[13]) != "0":
+                if (prev_action != int(s[13])):
                     if not(starting):
                         data.append(np.array(action_seq))
                         labels.append(prev_action)
                         subjects.append(prev_subject)
+                        tss.append(np.array(ts_seq))
                         action_ID+=1
+                        
                     action_seq = []
+                    ts_seq = []
                 else:
                     starting = False
 
-                data_seq = s[:12].values
+                data_seq = s[1:13].values
                 # data_seq[np.isnan(data_seq)] = 0
                 action_seq.append(data_seq)
-                prev_action = int(s[12])
-                prev_subject = s[13]
+                prev_action = int(s[13])
+                prev_subject = s[14]
+                ts_seq.append(s[0])
                 # print(prev_action)
                 collection.append(data_seq)
         else: 
@@ -2633,7 +2639,8 @@ class MHEALTHReaderV3(object):
                 data.append(np.array(action_seq))
                 labels.append(prev_action)
                 subjects.append(prev_subject)
-        return np.asarray(data), np.asarray(labels, dtype=int), np.asarray(subjects, dtype=str), np.array(collection)
+                tss.append(np.array(ts_seq))
+        return np.asarray(data), np.asarray(labels, dtype=int), np.asarray(subjects, dtype=str), np.asarray(tss), np.array(collection)
 
     def readMH(self):  
         label_map = [
@@ -2658,8 +2665,9 @@ class MHEALTHReaderV3(object):
         cols = [0,1,2,3,4,5,6,7,8,9,10,11]
         self.cols = cols
         self.df = pd.read_csv(self.file_path)
+        self.df.reset_index(inplace=True)
         # print "cols",cols
-        self.data, self.targets, self.subjects, self.all_data = self.readMHFiles(self.df)
+        self.data, self.targets, self.subjects, self.timestamps, self.all_data = self.readMHFiles(self.df)
         # self.data = self.data[:, :, cols]
         # print(self.data)
         # nan_perc = np.isnan(self.data).astype(int).mean()
@@ -2687,27 +2695,31 @@ class MHEALTHReaderV3(object):
 
             windows = [signal[p:p+seq_len, :] for p in windowing_points]
         else:
+            windowing_points = []
             windows = []
-        return windows
+        return windows, windowing_points
 
-    def resampling(self, data, targets, subjects, window_size, window_overlap, resample_freq):
+    def resampling(self, data, targets, subjects, timestamps, window_size, window_overlap, resample_freq):
         assert len(data) == len(targets), "# action data & # action labels are not matching"
-        all_data, all_ids, all_labels , all_subjects= [], [], [], []
+        all_data, all_ids, all_labels , all_subjects, all_ts= [], [], [], [], []
         for i, d in enumerate(data):
             # print(">>>>>>>>>>>>>>>  ", np.isnan(d).mean())
             label = targets[i]
             subject = subjects[i]
-            windows = self.windowing(d, window_size, window_overlap)
-            for w in windows:
+            ts = timestamps[i]
+            windows, points = self.windowing(d, window_size, window_overlap)
+            filtered_ts = ts[points]
+            for i, w in enumerate(windows):
                 # print(np.isnan(w).mean(), label, i)
                 resample_sig = self.resample(w, resample_freq)
                 # print(np.isnan(resample_sig).mean(), label, i)
                 all_data.append(resample_sig)
                 all_ids.append(i+1)
                 all_labels.append(label)
-                all_subjects.append(subject)
+                all_subjects.append(subject) 
+                all_ts.append(filtered_ts[i])
 
-        return all_data, all_ids, all_labels, all_subjects
+        return all_data, all_ids, all_labels, all_subjects, all_ts
 
     def generate(self, unseen_classes, window_size=5.21, window_overlap=1, resample_freq=10, smoothing=False, normalize=False, seen_ratio=0.2, unseen_ratio=0.8):
         
@@ -2736,6 +2748,7 @@ class MHEALTHReaderV3(object):
         seen_data = self.data[np.invert(unseen_mask)]
         seen_targets = self.targets[np.invert(unseen_mask)]
         seen_subjects = self.subjects[np.invert(unseen_mask)]
+        seen_timestamps = self.timestamps[np.invert(unseen_mask)]
         print(f"data shape : {self.data.shape}, seen_data shape : {seen_data.shape}")
         ids, cnts = np.unique(self.targets, return_counts=True)
         print({self.idToLabel[ids[e]]: cnts[e] for e in range(len(ids))})
@@ -2744,13 +2757,14 @@ class MHEALTHReaderV3(object):
         unseen_data = self.data[unseen_mask]
         unseen_targets = self.targets[unseen_mask]
         unseen_subjects = self.subjects[unseen_mask]
+        unseen_timestamps = self.timestamps[unseen_mask]
 
         # resampling seen and unseen datasets 
-        seen_data, seen_ids, seen_targets, seen_subjects = self.resampling(seen_data, seen_targets, seen_subjects, window_size, window_overlap, resample_freq)
-        unseen_data, unseen_ids, unseen_targets, unseen_subjects = self.resampling(unseen_data, unseen_targets, unseen_subjects, window_size, window_overlap, resample_freq)
+        seen_data, seen_ids, seen_targets, seen_subjects, seen_ts = self.resampling(seen_data, seen_targets, seen_subjects, seen_timestamps, window_size, window_overlap, resample_freq)
+        unseen_data, unseen_ids, unseen_targets, unseen_subjects, unseen_ts = self.resampling(unseen_data, unseen_targets, unseen_subjects, unseen_timestamps, window_size, window_overlap, resample_freq)
 
-        seen_data, seen_targets, seen_subjects = np.array(seen_data), np.array(seen_targets), np.array(seen_subjects)
-        unseen_data, unseen_targets, unseen_subjects = np.array(unseen_data), np.array(unseen_targets), np.array(unseen_subjects)
+        seen_data, seen_targets, seen_subjects, seen_ts = np.array(seen_data), np.array(seen_targets), np.array(seen_subjects), np.array(seen_ts)
+        unseen_data, unseen_targets, unseen_subjects, unseen_ts = np.array(unseen_data), np.array(unseen_targets), np.array(unseen_subjects), np.array(unseen_ts)
 
         if normalize:
             a, b, nft = seen_data.shape 
@@ -2773,26 +2787,33 @@ class MHEALTHReaderV3(object):
         split_point = int((1-seen_ratio)*len(seen_index))
         fst_index, sec_index = seen_index[:split_point], seen_index[split_point:]
         # print(type(fst_index), type(sec_index), type(seen_data), type(seen_targets))
-        X_seen_train, X_seen_val, y_seen_train, y_seen_val, subject_seen_train, subject_seen_val = seen_data[fst_index,:], seen_data[sec_index,:], seen_targets[fst_index], seen_targets[sec_index], seen_subjects[fst_index], seen_subjects[sec_index]
+        X_seen_train, X_seen_val= seen_data[fst_index,:], seen_data[sec_index,:]
+        y_seen_train, y_seen_val = seen_targets[fst_index], seen_targets[sec_index]
+        subject_seen_train, subject_seen_val = seen_subjects[fst_index], seen_subjects[sec_index]
+        ts_seen_train, ts_seen_val = seen_ts[fst_index], seen_ts[sec_index]
         
 
         data = {'train': {
                         'X': X_seen_train,
                         'y': y_seen_train,
-                        'subject': subject_seen_train
+                        'subject': subject_seen_train,
+                        'ts': ts_seen_train
                         },
                 'eval-seen':{
                         'X': X_seen_val,
                         'y': y_seen_val,
-                        'subject': subject_seen_val
+                        'subject': subject_seen_val,
+                        'ts': ts_seen_val
                         },
                 'test': {
                         'X': unseen_data,
                         'y': unseen_targets,
-                        'subject': unseen_subjects
+                        'subject': unseen_subjects,
+                        'ts': unseen_ts
                         },
                 'seen_classes': seen_classes,
                 'unseen_classes': unseen_classes
                 }
 
         return data
+        
